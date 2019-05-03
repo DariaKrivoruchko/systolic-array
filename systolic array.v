@@ -20,18 +20,18 @@
 		    a_out, b_out, res_out
         );
             parameter data_size = 2;
-		      input wire reset, clk, m_clk;
-            input wire [data_size-1:0]   a_in, b_in;
-            input wire [2*data_size-1:0] res_in;
-            output reg [2*data_size-1:0] res_out;
-            output reg [data_size-1:0]   a_out, b_out;
-            wire       [data_size-1:0]   q;
+		    input wire reset, clk, m_clk;//m_clk is signal to write b_in to memory 
+            input wire [data_size-1:0]     a_in, b_in;
+            input wire [(2*data_size-1):0] res_in;
+            output reg [(2*data_size-1):0] res_out;
+            output reg [data_size-1:0]     a_out, b_out;
+            wire       [data_size-1:0]     q;
             
             dtrig memory 
             (
                 .clk(m_clk), .data(b_in), .q(q)
             );
-	    	   always @(posedge clk)
+	    	always @(posedge clk)
             begin
                 if(reset)
                 begin
@@ -41,26 +41,25 @@
                 end
                 else
 		          begin
-			          a_out   = a_in;
-                   b_out   = q;
-                   res_out = a_in * q + res_in;
+			        a_out   = a_in;
+                    b_out   = q;
+                    res_out = a_in * q + res_in;
 		          end
             end
     endmodule
 
     module systolarray
     (
-        input clk, reset, 
-              a1, a2,
-              b1, b2, 
-              res1, res2, res3, res4
+        clk, reset, 
+        a1, a2,
+        b1, b2, 
+        res1, res2, res3, res4
     );
     parameter data_size  = 8;
     parameter array_size = 2;
     input wire clk, reset;
-    input wire [array_size*data_size:0] a, b;
-    output reg [2*array_size*data_size:0] res;
-    res = 0;
+    input wire [array_size*data_size - 1:0] a, b;
+    output reg [(2*array_size*data_size) - 1:0] res;
     genvar i, j;
     generate
         for(i = 0; i < array_size; i = i + 1)
@@ -80,12 +79,9 @@
                 );
             end            
         end
-
-
-
     endmodule
     
-
+/*
 module de10_lite
 (
     input   [1:0]  KEY,
@@ -111,4 +107,4 @@ module de10_lite
     .res_out (LEDR [9:6])
   );
 
-endmodule
+endmodule */
